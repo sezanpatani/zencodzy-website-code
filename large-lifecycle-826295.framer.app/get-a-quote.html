@@ -5975,7 +5975,7 @@
 
     <!-- End of headEnd -->
   </head>
-  <body>
+  <body>`n  <script src="js/error-suppressor.js"></script>
     <script
       async
       src="https://events.framer.com/script?v=1"
@@ -5983,17 +5983,21 @@
       data-no-nt
     ></script>
     <!-- Start of bodyStart -->
-    
+
     <!-- Intercept Framer form submissions -->
     <script>
-      (function() {
+      (function () {
         const originalFetch = window.fetch;
-        window.fetch = function(...args) {
+        window.fetch = function (...args) {
           const url = args[0];
           // Intercept Framer form API calls
-          if (typeof url === 'string' && url.includes('api.framer.com/forms')) {
-            console.log('🚫 Blocked Framer form submission - using custom handler instead');
-            return Promise.reject(new Error('Framer form submission blocked - using custom handler'));
+          if (typeof url === "string" && url.includes("api.framer.com/forms")) {
+            console.log(
+              "🚫 Blocked Framer form submission - using custom handler instead"
+            );
+            return Promise.reject(
+              new Error("Framer form submission blocked - using custom handler")
+            );
           }
           return originalFetch.apply(this, args);
         };
@@ -11587,8 +11591,8 @@
 
     <!-- End of bodyEnd -->
     <!-- Load custom form handler BEFORE Framer scripts -->
-  <script src="js/form-handler.js"></script>
-    
+    <script src="js/form-handler.js"></script>
+
     <script id="goBackButtonScript">
       document.addEventListener("DOMContentLoaded", function () {
         const goBackButtons = document.querySelectorAll(
@@ -11606,7 +11610,9 @@
         });
       });
     </script>
-</body>
+  </body>
 
   <!-- Mirrored from large-lifecycle-826295.framer.app/get-a-quote by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Apr 2025 11:05:48 GMT -->
 </html>
+
+
