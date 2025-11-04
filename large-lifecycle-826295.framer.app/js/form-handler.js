@@ -1,6 +1,7 @@
 /**
  * ZENCODZY Form Handler with Upstash Redis
  * Handles form submissions and stores data in Upstash Redis via serverless function
+ * Overrides Framer's default form submission
  */
 
 (function() {
@@ -17,15 +18,25 @@
 
   /**
    * Initialize form handlers when DOM is ready
+   * This overrides Framer's built-in form submission
    */
   function initFormHandlers() {
     const forms = document.querySelectorAll('form');
     
     forms.forEach(form => {
-      form.addEventListener('submit', handleFormSubmit);
+      // Remove Framer's form attributes to prevent their handler from running
+      form.removeAttribute('data-framer-form-id');
+      form.removeAttribute('data-framer-name');
+      
+      // Remove any existing submit listeners (Framer's handler)
+      const newForm = form.cloneNode(true);
+      form.parentNode.replaceChild(newForm, form);
+      
+      // Add our custom submit handler
+      newForm.addEventListener('submit', handleFormSubmit, true);
     });
 
-    console.log(`✅ Form handler initialized for ${forms.length} form(s)`);
+    console.log(`✅ Custom form handler initialized for ${forms.length} form(s) (Framer handler disabled)`);
   }
 
   /**
@@ -237,11 +248,19 @@
     }, 5000);
   }
 
+  // Initialize AFTER Framer scripts load but override their handlers
+  function init() {
+    // Wait a bit for Framer to initialize
+    setTimeout(() => {
+      initFormHandlers();
+    }, 500);
+  }
+
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFormHandlers);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initFormHandlers();
+    init();
   }
 
 })();
