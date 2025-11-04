@@ -1,0 +1,20 @@
+# Documentation
+*.md
+!README.md
+
+# Cache and logs
+hts-cache/
+*.log
+*.zip
+
+# Development
+.env
+.env.local
+node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Temp files
+*.tmp

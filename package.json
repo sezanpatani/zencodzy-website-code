@@ -1,0 +1,24 @@
+{
+  "name": "zencodzy-website",
+  "version": "1.0.0",
+  "description": "ZENCODZY website with Upstash Redis form storage",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step needed for static site'",
+    "deploy": "vercel"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.28.4"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "zencodzy",
+    "portfolio",
+    "upstash",
+    "redis",
+    "serverless"
+  ],
+  "author": "ZENCODZY",
+  "license": "MIT"
+}

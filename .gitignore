@@ -1,0 +1,18 @@
+.vercel
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+
+# Cache and temp files
+hts-cache/
+*.log
+*.zip
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
