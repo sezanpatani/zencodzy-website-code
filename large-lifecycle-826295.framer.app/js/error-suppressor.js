@@ -19,7 +19,16 @@
     'ERR_BLOCKED_BY_CLIENT',
     'Failed to load resource',
     'Access to script at',
-    'CORS policy'
+    'CORS policy',
+    'violates the following Content Security Policy directive',
+    'Refused to connect because it violates the document\'s Content Security Policy',
+    'Fetch API cannot load',
+    'script-src-elem',
+    'font-src',
+    'img-src',
+    'connect-src',
+    '.mjs.map',
+    'Fatal error (see above)'
   ];
 
   // Check if message should be suppressed
