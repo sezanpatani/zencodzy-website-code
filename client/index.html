@@ -4,12 +4,12 @@
 
 
 <head>
-<script>// Ultra-Fast Page Loader - Waits for complete load
-(function () {
-    'use strict';
+    <script>// Ultra-Fast Page Loader - Waits for complete load
+        (function () {
+            'use strict';
 
-    // Minimal critical CSS for instant display
-    const criticalCSS = `
+            // Minimal critical CSS for instant display
+            const criticalCSS = `
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background: #000; 
@@ -73,15 +73,15 @@
         }
     `;
 
-    // Inject critical CSS immediately
-    const style = document.createElement('style');
-    style.textContent = criticalCSS;
-    document.head.insertBefore(style, document.head.firstChild);
+            // Inject critical CSS immediately
+            const style = document.createElement('style');
+            style.textContent = criticalCSS;
+            document.head.insertBefore(style, document.head.firstChild);
 
-    // Create loader HTML
-    const loader = document.createElement('div');
-    loader.className = 'instant-loader';
-    loader.innerHTML = `
+            // Create loader HTML
+            const loader = document.createElement('div');
+            loader.className = 'instant-loader';
+            loader.innerHTML = `
         <div class="loader-logo">ZENCODZY</div>
         <div class="loader-bar">
             <div class="loader-progress" id="loadProgress"></div>
@@ -89,114 +89,113 @@
         <div class="loader-text" id="loadText">Loading...</div>
     `;
 
-    // Insert loader immediately
-    if (document.body) {
-        document.body.insertBefore(loader, document.body.firstChild);
-    } else {
-        document.addEventListener('DOMContentLoaded', () => {
-            document.body.insertBefore(loader, document.body.firstChild);
-        });
-    }
-
-    // Progress tracking
-    let progress = 0;
-    let isComplete = false;
-    const progressBar = () => document.getElementById('loadProgress');
-    const loadText = () => document.getElementById('loadText');
-
-    function updateProgress(value, text) {
-        progress = Math.min(value, 100);
-        const bar = progressBar();
-        if (bar) bar.style.width = progress + '%';
-
-        const textEl = loadText();
-        if (textEl && text) textEl.textContent = text;
-    }
-
-    // Initial progress
-    updateProgress(5, 'Loading...');
-
-    // Track loading stages
-    let resourcesLoaded = 0;
-    let totalResources = 0;
-    let imagesLoaded = 0;
-    let totalImages = 0;
-
-    // DOM Content Loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        updateProgress(20, 'Preparing content...');
-
-        // Count all resources
-        totalImages = document.images.length;
-        const scripts = document.scripts.length;
-        const stylesheets = document.styleSheets.length;
-        totalResources = totalImages + scripts + stylesheets;
-
-        updateProgress(30, 'Loading resources...');
-
-        // Track each image
-        Array.from(document.images).forEach((img, index) => {
-            const trackLoad = () => {
-                imagesLoaded++;
-                const imgProgress = 30 + (imagesLoaded / Math.max(totalImages, 1)) * 50;
-                updateProgress(imgProgress, `Loading images... ${imagesLoaded}/${totalImages}`);
-            };
-
-            if (img.complete) {
-                trackLoad();
+            if (document.body) {
+                document.body.insertBefore(loader, document.body.firstChild);
             } else {
-                img.addEventListener('load', trackLoad);
-                img.addEventListener('error', trackLoad);
+                document.addEventListener('DOMContentLoaded', () => {
+                    document.body.insertBefore(loader, document.body.firstChild);
+                });
             }
-        });
 
-        // If no images, move to next stage
-        if (totalImages === 0) {
-            updateProgress(80, 'Almost ready...');
-        }
-    });
+            // Progress tracking
+            let progress = 0;
+            let isComplete = false;
+            const progressBar = () => document.getElementById('loadProgress');
+            const loadText = () => document.getElementById('loadText');
 
-    // Window fully loaded
-    window.addEventListener('load', () => {
-        updateProgress(90, 'Finalizing...');
+            function updateProgress(value, text) {
+                progress = Math.min(value, 100);
+                const bar = progressBar();
+                if (bar) bar.style.width = progress + '%';
 
-        // Wait a bit to ensure everything is rendered
-        setTimeout(() => {
-            updateProgress(100, 'Complete!');
-            isComplete = true;
+                const textEl = loadText();
+                if (textEl && text) textEl.textContent = text;
+            }
 
-            // Hide loader after everything is ready
-            setTimeout(() => {
-                loader.classList.add('hide');
+            // Initial progress
+            updateProgress(5, 'Loading...');
 
-                // Remove loader after animation
-                setTimeout(() => {
-                    if (loader.parentNode) {
-                        loader.parentNode.removeChild(loader);
+            // Track loading stages
+            let resourcesLoaded = 0;
+            let totalResources = 0;
+            let imagesLoaded = 0;
+            let totalImages = 0;
+
+            // DOM Content Loaded
+            document.addEventListener('DOMContentLoaded', () => {
+                updateProgress(20, 'Preparing content...');
+
+                // Count all resources
+                totalImages = document.images.length;
+                const scripts = document.scripts.length;
+                const stylesheets = document.styleSheets.length;
+                totalResources = totalImages + scripts + stylesheets;
+
+                updateProgress(30, 'Loading resources...');
+
+                // Track each image
+                Array.from(document.images).forEach((img, index) => {
+                    const trackLoad = () => {
+                        imagesLoaded++;
+                        const imgProgress = 30 + (imagesLoaded / Math.max(totalImages, 1)) * 50;
+                        updateProgress(imgProgress, `Loading images... ${imagesLoaded}/${totalImages}`);
+                    };
+
+                    if (img.complete) {
+                        trackLoad();
+                    } else {
+                        img.addEventListener('load', trackLoad);
+                        img.addEventListener('error', trackLoad);
                     }
-                }, 800);
-            }, 500);
-        }, 300);
-    });
+                });
 
-    // Safety fallback - force hide after 10 seconds
-    setTimeout(() => {
-        if (!isComplete) {
-            updateProgress(100, 'Ready!');
-            loader.classList.add('hide');
-            setTimeout(() => {
-                if (loader.parentNode) {
-                    loader.parentNode.removeChild(loader);
+                // If no images, move to next stage
+                if (totalImages === 0) {
+                    updateProgress(80, 'Almost ready...');
                 }
-            }, 800);
-        }
-    }, 10000);
+            });
 
-    // Prevent FOUC
-    document.documentElement.style.visibility = 'visible';
+            // Window fully loaded
+            window.addEventListener('load', () => {
+                updateProgress(90, 'Finalizing...');
 
-})();
-</script>
+                // Wait a bit to ensure everything is rendered
+                setTimeout(() => {
+                    updateProgress(100, 'Complete!');
+                    isComplete = true;
+
+                    // Hide loader after everything is ready
+                    setTimeout(() => {
+                        loader.classList.add('hide');
+
+                        // Remove loader after animation
+                        setTimeout(() => {
+                            if (loader.parentNode) {
+                                loader.parentNode.removeChild(loader);
+                            }
+                        }, 800);
+                    }, 500);
+                }, 300);
+            });
+
+            // Safety fallback - force hide after 10 seconds
+            setTimeout(() => {
+                if (!isComplete) {
+                    updateProgress(100, 'Ready!');
+                    loader.classList.add('hide');
+                    setTimeout(() => {
+                        if (loader.parentNode) {
+                            loader.parentNode.removeChild(loader);
+                        }
+                    }, 800);
+                }
+            }, 10000);
+
+            // Prevent FOUC
+            document.documentElement.style.visibility = 'visible';
+
+        })();
+    </script>
     <meta charset="utf-8">
 
 
@@ -7248,37 +7247,46 @@
     </style><!-- Start of headEnd -->
 
     <!-- End of headEnd -->
-    <link rel="preload" href="https://fonts.gstatic.com/s/bigshoulderstext/v25/55xEezRtP9G3CGPIf49hxc8P0eytUxB2l66LmF6xc3kA3Wit7TUFNw.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload"
+        href="https://fonts.gstatic.com/s/bigshoulderstext/v25/55xEezRtP9G3CGPIf49hxc8P0eytUxB2l66LmF6xc3kA3Wit7TUFNw.woff2"
+        as="font" type="font/woff2" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://framerusercontent.com">
     <link rel="dns-prefetch" href="https://framerusercontent.com">
-<style>
-/* Ultra-fast rendering optimizations */
-html { 
-    visibility: visible;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-body {
-    visibility: visible;
-}
-/* Content visibility for faster rendering */
-section, article, .framer-component {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 500px;
-}
-/* Prevent layout shift */
-img {
-    max-width: 100%;
-    height: auto;
-}
-/* GPU acceleration */
-.framer-motion, [data-framer-component-type] {
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
-</style>
+    <style>
+        /* Ultra-fast rendering optimizations */
+        html {
+            visibility: visible;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            visibility: visible;
+        }
+
+        /* Content visibility for faster rendering */
+        section,
+        article,
+        .framer-component {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 500px;
+        }
+
+        /* Prevent layout shift */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* GPU acceleration */
+        .framer-motion,
+        [data-framer-component-type] {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+    </style>
 </head>
 
 <body>
@@ -7430,7 +7438,7 @@ img {
                         style="width:100%">
                         <div class="framer-155qo5d"
                             style="--border-bottom-width:0px;--border-color:rgba(0, 0, 0, 0);--border-left-width:0px;--border-right-width:0px;--border-style:solid;--border-top-width:0px;background-color:var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0));border-bottom-left-radius:24px;border-bottom-right-radius:24px;border-top-left-radius:24px;border-top-right-radius:24px;box-shadow:0px 1px 20px 0px rgba(0, 0, 0, 0.15)">
-                            <div class="framer-1nuyys8" data-framer-name="Menu Stack">
+                            <div class="framer-1nuyys8" data-framer-name="Keval Lathiya">
                                 <div class="framer-walzzt" data-framer-name="Menu"
                                     style="border-bottom-left-radius:16px;border-bottom-right-radius:16px;border-top-left-radius:16px;border-top-right-radius:16px"
                                     data-highlight="true" tabindex="0">
@@ -7732,7 +7740,7 @@ img {
                                         <p class="framer-text framer-styles-preset-1w2vj7p"
                                             data-styles-preset="Pkh6UGLnF"
                                             style="--framer-text-alignment:right;--framer-text-color:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204))">
-                                            "ESTABLISHED GÇö 2024 RAJKOT, INDIA"</p>
+                                            "ESTABLISHED Gï¿½ï¿½ 2024 RAJKOT, INDIA"</p>
                                     </div>
                                 </div>
                             </div>
@@ -8814,7 +8822,7 @@ img {
                                                             data-styles-preset="LL29a7KVz"
                                                             style="--framer-text-alignment:left;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))">
                                                             Highlights our broad client base and the strong
-                                                            relationships weGÇÖve built.</p>
+                                                            relationships weGï¿½ï¿½ve built.</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -8850,7 +8858,7 @@ img {
                                                             data-styles-preset="LL29a7KVz"
                                                             style="--framer-text-alignment:left;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))">
                                                             Highlights our broad client base and the strong
-                                                            relationships weGÇÖve built.</p>
+                                                            relationships weGï¿½ï¿½ve built.</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -9194,7 +9202,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">SJ Patani</h3>
+                                                                        class="framer-text">Sezan Patani</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -9215,7 +9223,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9261,7 +9269,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">SJ Patani</h3>
+                                                                        class="framer-text">Sezan Patani</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -9282,7 +9290,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9330,8 +9338,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Chief Executive Officer
-                                                                        (CEO)</p>
+                                                                        class="framer-text">Backend Developer</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -9346,7 +9353,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9396,8 +9403,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Chief Executive Officer
-                                                                        (CEO)</p>
+                                                                        class="framer-text">Backend Developer</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -9412,7 +9418,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9460,7 +9466,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Video editor </p>
+                                                                        class="framer-text">Video Editor</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -9475,7 +9481,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9525,7 +9531,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Video editor </p>
+                                                                        class="framer-text">Video Editor</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -9540,7 +9546,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9584,7 +9590,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Bansi Dhaduk</h3>
+                                                                        class="framer-text">Chand Kavar</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -9605,7 +9611,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9651,7 +9657,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Bansi Dhaduk</h3>
+                                                                        class="framer-text">Chand Kavar</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -9672,7 +9678,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9736,7 +9742,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9802,7 +9808,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9850,7 +9856,8 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Senior Project Manager</p>
+                                                                        class="framer-text">Waiting For New Talent To
+                                                                        Join</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -9865,7 +9872,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -9915,7 +9922,8 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Senior Project Manager</p>
+                                                                        class="framer-text">Waiting For New Talent To
+                                                                        Join</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -9930,7 +9938,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -10150,7 +10158,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10306,7 +10314,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10365,7 +10373,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10521,7 +10529,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10580,7 +10588,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10736,7 +10744,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10795,7 +10803,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10951,7 +10959,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10980,7 +10988,8 @@ img {
                                                                 aria-label="Next" tabindex="0"><img decoding="async"
                                                                     width="40" height="40"
                                                                     src="https://framerusercontent.com/images/11KSGbIZoRSg4pjdnUoif6MKHI.svg"
-                                                                    alt="Next Arrow"></button></div>
+                                                                    alt="Next Arrow"></button>
+                                                        </div>
                                                     </fieldset>
                                                 </section><!--/$-->
                                             </div>
@@ -11046,7 +11055,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11202,7 +11211,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11261,7 +11270,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11417,7 +11426,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11476,7 +11485,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11632,7 +11641,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11691,7 +11700,7 @@ img {
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeGÇÖve seen a significant
+                                                                                our values. WeGï¿½ï¿½ve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11847,7 +11856,7 @@ img {
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyGÇÖs UX/UI design expertise
+                                                                                "ZencodzyGï¿½ï¿½s UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11876,7 +11885,8 @@ img {
                                                                 aria-label="Next" tabindex="0"><img decoding="async"
                                                                     width="40" height="40"
                                                                     src="https://framerusercontent.com/images/11KSGbIZoRSg4pjdnUoif6MKHI.svg"
-                                                                    alt="Next Arrow"></button></div>
+                                                                    alt="Next Arrow"></button>
+                                                        </div>
                                                     </fieldset>
                                                 </section><!--/$-->
                                             </div>
@@ -11967,8 +11977,8 @@ img {
                                             <div class="framer-1no2cv6-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12002,14 +12012,13 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Alex Johnson</h3>
+                                                                        class="framer-text">Sezan Patani</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Chief Executive Officer
-                                                                        (CEO)</p>
+                                                                        class="framer-text">Backend Developer</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -12024,7 +12033,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12034,8 +12043,8 @@ img {
                                             <div class="framer-1no2cv6-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12069,14 +12078,13 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Alex Johnson</h3>
+                                                                        class="framer-text">Sezan Patani</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Chief Executive Officer
-                                                                        (CEO)</p>
+                                                                        class="framer-text">Backend Developer</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -12091,7 +12099,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12101,8 +12109,8 @@ img {
                                             <div class="framer-rcvlus-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12136,7 +12144,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Megan Smith</h3>
+                                                                        class="framer-text">Keval Lathiya</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12157,7 +12165,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12167,8 +12175,8 @@ img {
                                             <div class="framer-rcvlus-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12202,7 +12210,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Megan Smith</h3>
+                                                                        class="framer-text">Keval Lathiya</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12223,7 +12231,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12233,8 +12241,8 @@ img {
                                             <div class="framer-ehhy6e-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12268,7 +12276,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Michael Davis</h3>
+                                                                        class="framer-text">Arman Dela</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12289,7 +12297,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12299,8 +12307,8 @@ img {
                                             <div class="framer-ehhy6e-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12334,7 +12342,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Michael Davis</h3>
+                                                                        class="framer-text">Arman Dela</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12355,7 +12363,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12365,8 +12373,8 @@ img {
                                             <div class="framer-15zw0ay-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12400,7 +12408,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Sophia Martinez</h3>
+                                                                        class="framer-text">Chand Kavar</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12421,7 +12429,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12431,8 +12439,8 @@ img {
                                             <div class="framer-15zw0ay-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12466,7 +12474,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Sophia Martinez</h3>
+                                                                        class="framer-text">Chand Kavar</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12487,7 +12495,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12497,8 +12505,8 @@ img {
                                             <div class="framer-r2h6w6-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12532,7 +12540,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Daniel Kim</h3>
+                                                                        class="framer-text">Raj Jadav</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12554,7 +12562,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12564,8 +12572,8 @@ img {
                                             <div class="framer-r2h6w6-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12599,7 +12607,7 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Daniel Kim</h3>
+                                                                        class="framer-text">Raj Jadav</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
@@ -12621,7 +12629,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12631,8 +12639,8 @@ img {
                                             <div class="framer-1essqib-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12666,13 +12674,14 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Emily Brown</h3>
+                                                                        class="framer-text">Zencodzy</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Senior Project Manager</p>
+                                                                        class="framer-text">Waiting For New Talent To
+                                                                        Join</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -12687,7 +12696,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12697,8 +12706,8 @@ img {
                                             <div class="framer-1essqib-container"><!--$--><a
                                                     class="framer-cfRT5 framer-726oe0 framer-v-11bxw4p framer-19ua89k"
                                                     data-framer-name="Mobile" style="height:100%;width:100%"
-                                                    href="https://x.com/CristianMielu" target="_blank" rel="noopener"
-                                                    tabindex="0">
+                                                    href="https://www.linkedin.com/company/zencodzy" target="_blank"
+                                                    rel="noopener" tabindex="0">
                                                     <div class="framer-15aqfib" data-framer-name="3D-Element"
                                                         style="transform:perspective(1200px)">
                                                         <div class="framer-10039zs" data-framer-name="Right"
@@ -12732,13 +12741,14 @@ img {
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-a0htzi:var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <h3 style="--font-selector:R0Y7SW50ZXItcmVndWxhcg==;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:18px;--framer-text-color:var(--extracted-a0htzi, var(--token-f92a0477-0163-463c-b8d2-581e7fa888a7, rgb(255, 255, 255)))"
-                                                                        class="framer-text">Emily Brown</h3>
+                                                                        class="framer-text">Zencodzy</h3>
                                                                 </div>
                                                                 <div class="framer-1uvzjo1"
                                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204));--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                                     data-framer-component-type="RichTextContainer">
                                                                     <p style="--font-selector:R0Y7SW50ZXItMzAw;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:12px;--framer-font-weight:300;--framer-line-height:1.3em;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))"
-                                                                        class="framer-text">Senior Project Manager</p>
+                                                                        class="framer-text">Waiting For New Talent To
+                                                                        Join</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -12753,7 +12763,7 @@ img {
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-r6o4lv, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
                                                                     class="framer-text">Visit My</p>
                                                                 <p style="--font-selector:SW50ZXItTGlnaHQ=;--framer-font-family:&quot;Inter&quot;, &quot;Inter Placeholder&quot;, sans-serif;--framer-font-size:24px;--framer-font-weight:300;--framer-text-alignment:center;--framer-text-color:var(--extracted-2gxw0f, var(--token-507279ad-bde7-462a-a198-cfa80d6c3183, rgb(0, 0, 0)))"
-                                                                    class="framer-text">X (Twitter)</p>
+                                                                    class="framer-text">LinkedIn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -12804,7 +12814,7 @@ img {
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Crafting visually
-                                                        stunning and user-friendly websites tailored to your brandGÇÖs
+                                                        stunning and user-friendly websites tailored to your brandGï¿½ï¿½s
                                                         identity and goals.</p>
                                                 </div>
                                             </div>
@@ -12836,7 +12846,7 @@ img {
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Crafting visually
-                                                        stunning and user-friendly websites tailored to your brandGÇÖs
+                                                        stunning and user-friendly websites tailored to your brandGï¿½ï¿½s
                                                         identity and goals.</p>
                                                 </div>
                                             </div>
@@ -12868,7 +12878,7 @@ img {
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Crafting visually
-                                                        stunning and user-friendly websites tailored to your brandGÇÖs
+                                                        stunning and user-friendly websites tailored to your brand's
                                                         identity and goals.</p>
                                                 </div>
                                             </div>
@@ -12900,7 +12910,7 @@ img {
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Enhancing your
-                                                        websiteGÇÖs visibility and ranking on search engines through
+                                                        websiteGï¿½ï¿½s visibility and ranking on search engines through
                                                         strategic keyword integration and technical optimization.</p>
                                                 </div>
                                             </div>
@@ -12932,7 +12942,7 @@ img {
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Enhancing your
-                                                        websiteGÇÖs visibility and ranking on search engines through
+                                                        websiteGï¿½ï¿½s visibility and ranking on search engines through
                                                         strategic keyword integration and technical optimization.</p>
                                                 </div>
                                             </div>
@@ -12964,7 +12974,7 @@ img {
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Enhancing your
-                                                        websiteGÇÖs visibility and ranking on search engines through
+                                                        website's visibility and ranking on search engines through
                                                         strategic keyword integration and technical optimization.</p>
                                                 </div>
                                             </div>
@@ -13861,8 +13871,8 @@ img {
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">"From concept to
                                                         code, we craft mobile apps that are fast, scalable, and
-                                                        beautifully designed. Whether itGÇÖs Android, iOS, or
-                                                        cross-platform GÇö ZENCODZY delivers digital experiences that
+                                                        beautifully designed. Whether itGï¿½ï¿½s Android, iOS, or
+                                                        cross-platform Gï¿½ï¿½ ZENCODZY delivers digital experiences that
                                                         your users will love."</p>
                                                     <p class="framer-text framer-styles-preset-nmfxqk"><br
                                                             class="framer-text trailing-break"></p>
@@ -13897,8 +13907,8 @@ img {
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">"From concept to
                                                         code, we craft mobile apps that are fast, scalable, and
-                                                        beautifully designed. Whether itGÇÖs Android, iOS, or
-                                                        cross-platform GÇö ZENCODZY delivers digital experiences that
+                                                        beautifully designed. Whether itGï¿½ï¿½s Android, iOS, or
+                                                        cross-platform Gï¿½ï¿½ ZENCODZY delivers digital experiences that
                                                         your users will love."</p>
                                                     <p class="framer-text framer-styles-preset-nmfxqk"><br
                                                             class="framer-text trailing-break"></p>
@@ -13933,8 +13943,8 @@ img {
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">"From concept to
                                                         code, we craft mobile apps that are fast, scalable, and
-                                                        beautifully designed. Whether itGÇÖs Android, iOS, or
-                                                        cross-platform GÇö ZENCODZY delivers digital experiences that
+                                                        beautifully designed. Whether itGï¿½ï¿½s Android, iOS, or
+                                                        cross-platform Gï¿½ï¿½ ZENCODZY delivers digital experiences that
                                                         your users will love."</p>
                                                     <p class="framer-text framer-styles-preset-nmfxqk"><br
                                                             class="framer-text trailing-break"></p>
@@ -15351,8 +15361,8 @@ img {
     <!-- Start of bodyEnd -->
 
     <!-- End of bodyEnd -->
-<script defer src="/assets/js/image-optimizer.js"></script>
-<script defer src="/assets/js/navigation-fix.js"></script>
+    <script defer src="/assets/js/image-optimizer.js"></script>
+    <script defer src="/assets/js/navigation-fix.js"></script>
 </body>
 
 <!-- Mirrored from large-lifecycle-826295.framer.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Apr 2025 11:05:34 GMT -->

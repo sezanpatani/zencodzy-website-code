@@ -11,11 +11,11 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true,
-    host: true, // Expose to network
-    hmr: false, // DISABLE WebSockets (No Hot Reload)
+    host: true,
+    hmr: true,
     open: true,
     headers: {
-      'Cache-Control': 'public, max-age=31536000',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
     },
     proxy: {
       '/api': {
