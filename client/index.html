@@ -1,9 +1,202 @@
-ï»¿<!doctype html>
+<!doctype html>
 
 <html lang="en">
 
 
 <head>
+<script>// Ultra-Fast Page Loader - Waits for complete load
+(function () {
+    'use strict';
+
+    // Minimal critical CSS for instant display
+    const criticalCSS = `
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+        .instant-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .instant-loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: #9cff33;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .loader-bar {
+            width: 250px;
+            height: 4px;
+            background: rgba(156, 255, 51, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loader-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #9cff33, #7acc00);
+            width: 0%;
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 15px #9cff33;
+        }
+        .loader-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(156, 255, 51, 0.8);
+            letter-spacing: 1px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+    `;
+
+    // Inject critical CSS immediately
+    const style = document.createElement('style');
+    style.textContent = criticalCSS;
+    document.head.insertBefore(style, document.head.firstChild);
+
+    // Create loader HTML
+    const loader = document.createElement('div');
+    loader.className = 'instant-loader';
+    loader.innerHTML = `
+        <div class="loader-logo">ZENCODZY</div>
+        <div class="loader-bar">
+            <div class="loader-progress" id="loadProgress"></div>
+        </div>
+        <div class="loader-text" id="loadText">Loading...</div>
+    `;
+
+    // Insert loader immediately
+    if (document.body) {
+        document.body.insertBefore(loader, document.body.firstChild);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.insertBefore(loader, document.body.firstChild);
+        });
+    }
+
+    // Progress tracking
+    let progress = 0;
+    let isComplete = false;
+    const progressBar = () => document.getElementById('loadProgress');
+    const loadText = () => document.getElementById('loadText');
+
+    function updateProgress(value, text) {
+        progress = Math.min(value, 100);
+        const bar = progressBar();
+        if (bar) bar.style.width = progress + '%';
+
+        const textEl = loadText();
+        if (textEl && text) textEl.textContent = text;
+    }
+
+    // Initial progress
+    updateProgress(5, 'Loading...');
+
+    // Track loading stages
+    let resourcesLoaded = 0;
+    let totalResources = 0;
+    let imagesLoaded = 0;
+    let totalImages = 0;
+
+    // DOM Content Loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        updateProgress(20, 'Preparing content...');
+
+        // Count all resources
+        totalImages = document.images.length;
+        const scripts = document.scripts.length;
+        const stylesheets = document.styleSheets.length;
+        totalResources = totalImages + scripts + stylesheets;
+
+        updateProgress(30, 'Loading resources...');
+
+        // Track each image
+        Array.from(document.images).forEach((img, index) => {
+            const trackLoad = () => {
+                imagesLoaded++;
+                const imgProgress = 30 + (imagesLoaded / Math.max(totalImages, 1)) * 50;
+                updateProgress(imgProgress, `Loading images... ${imagesLoaded}/${totalImages}`);
+            };
+
+            if (img.complete) {
+                trackLoad();
+            } else {
+                img.addEventListener('load', trackLoad);
+                img.addEventListener('error', trackLoad);
+            }
+        });
+
+        // If no images, move to next stage
+        if (totalImages === 0) {
+            updateProgress(80, 'Almost ready...');
+        }
+    });
+
+    // Window fully loaded
+    window.addEventListener('load', () => {
+        updateProgress(90, 'Finalizing...');
+
+        // Wait a bit to ensure everything is rendered
+        setTimeout(() => {
+            updateProgress(100, 'Complete!');
+            isComplete = true;
+
+            // Hide loader after everything is ready
+            setTimeout(() => {
+                loader.classList.add('hide');
+
+                // Remove loader after animation
+                setTimeout(() => {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                }, 800);
+            }, 500);
+        }, 300);
+    });
+
+    // Safety fallback - force hide after 10 seconds
+    setTimeout(() => {
+        if (!isComplete) {
+            updateProgress(100, 'Ready!');
+            loader.classList.add('hide');
+            setTimeout(() => {
+                if (loader.parentNode) {
+                    loader.parentNode.removeChild(loader);
+                }
+            }, 800);
+        }
+    }, 10000);
+
+    // Prevent FOUC
+    document.documentElement.style.visibility = 'visible';
+
+})();
+</script>
     <meta charset="utf-8">
 
 
@@ -130,21 +323,6 @@
             --token-a78265f6-d21f-466e-a072-73e9b9a8b3f5: rgb(38, 38, 38);
             --token-b28b6d0f-6d6c-4dea-88ce-51e68a66ca67: rgb(13, 13, 13);
             --token-507279ad-bde7-462a-a198-cfa80d6c3183: rgb(0, 0, 0)
-        }
-
-        #__framer-badge-container {
-            position: fixed;
-            bottom: 0;
-            padding: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: right;
-            pointer-events: none;
-            z-index: 314159
-        }
-
-        .__framer-badge {
-            pointer-events: auto
         }
 
         @font-face {
@@ -7070,10 +7248,42 @@
     </style><!-- Start of headEnd -->
 
     <!-- End of headEnd -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/bigshoulderstext/v25/55xEezRtP9G3CGPIf49hxc8P0eytUxB2l66LmF6xc3kA3Wit7TUFNw.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://framerusercontent.com">
+    <link rel="dns-prefetch" href="https://framerusercontent.com">
+<style>
+/* Ultra-fast rendering optimizations */
+html { 
+    visibility: visible;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+body {
+    visibility: visible;
+}
+/* Content visibility for faster rendering */
+section, article, .framer-component {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+}
+/* Prevent layout shift */
+img {
+    max-width: 100%;
+    height: auto;
+}
+/* GPU acceleration */
+.framer-motion, [data-framer-component-type] {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+</style>
 </head>
 
 <body>
-    <script async src="https://events.framer.com/script?v=1"
+
+    <script defer async src="https://events.framer.com/script?v=1"
         data-fid="8e4fd42cc59ef00226a8f4c8808c857433054cb589a16fd56a402a422579a6db" data-no-nt></script>
     <!-- Start of bodyStart -->
 
@@ -7522,7 +7732,7 @@
                                         <p class="framer-text framer-styles-preset-1w2vj7p"
                                             data-styles-preset="Pkh6UGLnF"
                                             style="--framer-text-alignment:right;--framer-text-color:var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204))">
-                                            "ESTABLISHED Î“Ã‡Ã¶ 2024 RAJKOT, INDIA"</p>
+                                            "ESTABLISHED GÇö 2024 RAJKOT, INDIA"</p>
                                     </div>
                                 </div>
                             </div>
@@ -8604,7 +8814,7 @@
                                                             data-styles-preset="LL29a7KVz"
                                                             style="--framer-text-alignment:left;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))">
                                                             Highlights our broad client base and the strong
-                                                            relationships weÎ“Ã‡Ã–ve built.</p>
+                                                            relationships weGÇÖve built.</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -8640,7 +8850,7 @@
                                                             data-styles-preset="LL29a7KVz"
                                                             style="--framer-text-alignment:left;--framer-text-color:var(--extracted-r6o4lv, var(--token-ea2baa85-1cd1-4f09-9415-e302f0fcfa08, rgb(204, 204, 204)))">
                                                             Highlights our broad client base and the strong
-                                                            relationships weÎ“Ã‡Ã–ve built.</p>
+                                                            relationships weGÇÖve built.</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -9940,7 +10150,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10096,7 +10306,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10155,7 +10365,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10311,7 +10521,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10370,7 +10580,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10526,7 +10736,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10585,7 +10795,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10741,7 +10951,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -10836,7 +11046,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -10992,7 +11202,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11051,7 +11261,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11207,7 +11417,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11266,7 +11476,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11422,7 +11632,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -11481,7 +11691,7 @@
                                                                                 innovative design solutions and
                                                                                 attention to detail helped us create a
                                                                                 stunning website that truly represents
-                                                                                our values. WeÎ“Ã‡Ã–ve seen a significant
+                                                                                our values. WeGÇÖve seen a significant
                                                                                 boost in user engagement and conversions
                                                                                 since the redesign."</p>
                                                                         </div>
@@ -11637,7 +11847,7 @@
                                                                             data-framer-component-type="RichTextContainer">
                                                                             <p
                                                                                 class="framer-text framer-styles-preset-6nswhk">
-                                                                                "ZencodzyÎ“Ã‡Ã–s UX/UI design expertise
+                                                                                "ZencodzyGÇÖs UX/UI design expertise
                                                                                 transformed our app into a user-friendly
                                                                                 and engaging platform. Their
                                                                                 collaborative approach and commitment to
@@ -12594,7 +12804,7 @@
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Crafting visually
-                                                        stunning and user-friendly websites tailored to your brandÎ“Ã‡Ã–s
+                                                        stunning and user-friendly websites tailored to your brandGÇÖs
                                                         identity and goals.</p>
                                                 </div>
                                             </div>
@@ -12626,7 +12836,7 @@
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Crafting visually
-                                                        stunning and user-friendly websites tailored to your brandÎ“Ã‡Ã–s
+                                                        stunning and user-friendly websites tailored to your brandGÇÖs
                                                         identity and goals.</p>
                                                 </div>
                                             </div>
@@ -12658,7 +12868,7 @@
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Crafting visually
-                                                        stunning and user-friendly websites tailored to your brandÎ“Ã‡Ã–s
+                                                        stunning and user-friendly websites tailored to your brandGÇÖs
                                                         identity and goals.</p>
                                                 </div>
                                             </div>
@@ -12690,7 +12900,7 @@
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Enhancing your
-                                                        websiteÎ“Ã‡Ã–s visibility and ranking on search engines through
+                                                        websiteGÇÖs visibility and ranking on search engines through
                                                         strategic keyword integration and technical optimization.</p>
                                                 </div>
                                             </div>
@@ -12722,7 +12932,7 @@
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Enhancing your
-                                                        websiteÎ“Ã‡Ã–s visibility and ranking on search engines through
+                                                        websiteGÇÖs visibility and ranking on search engines through
                                                         strategic keyword integration and technical optimization.</p>
                                                 </div>
                                             </div>
@@ -12754,7 +12964,7 @@
                                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-link-text-color:rgb(0, 153, 255);--framer-link-text-decoration:underline;transform:none"
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">Enhancing your
-                                                        websiteÎ“Ã‡Ã–s visibility and ranking on search engines through
+                                                        websiteGÇÖs visibility and ranking on search engines through
                                                         strategic keyword integration and technical optimization.</p>
                                                 </div>
                                             </div>
@@ -13651,8 +13861,8 @@
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">"From concept to
                                                         code, we craft mobile apps that are fast, scalable, and
-                                                        beautifully designed. Whether itÎ“Ã‡Ã–s Android, iOS, or
-                                                        cross-platform Î“Ã‡Ã¶ ZENCODZY delivers digital experiences that
+                                                        beautifully designed. Whether itGÇÖs Android, iOS, or
+                                                        cross-platform GÇö ZENCODZY delivers digital experiences that
                                                         your users will love."</p>
                                                     <p class="framer-text framer-styles-preset-nmfxqk"><br
                                                             class="framer-text trailing-break"></p>
@@ -13687,8 +13897,8 @@
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">"From concept to
                                                         code, we craft mobile apps that are fast, scalable, and
-                                                        beautifully designed. Whether itÎ“Ã‡Ã–s Android, iOS, or
-                                                        cross-platform Î“Ã‡Ã¶ ZENCODZY delivers digital experiences that
+                                                        beautifully designed. Whether itGÇÖs Android, iOS, or
+                                                        cross-platform GÇö ZENCODZY delivers digital experiences that
                                                         your users will love."</p>
                                                     <p class="framer-text framer-styles-preset-nmfxqk"><br
                                                             class="framer-text trailing-break"></p>
@@ -13723,8 +13933,8 @@
                                                     data-framer-component-type="RichTextContainer">
                                                     <p class="framer-text framer-styles-preset-nmfxqk">"From concept to
                                                         code, we craft mobile apps that are fast, scalable, and
-                                                        beautifully designed. Whether itÎ“Ã‡Ã–s Android, iOS, or
-                                                        cross-platform Î“Ã‡Ã¶ ZENCODZY delivers digital experiences that
+                                                        beautifully designed. Whether itGÇÖs Android, iOS, or
+                                                        cross-platform GÇö ZENCODZY delivers digital experiences that
                                                         your users will love."</p>
                                                     <p class="framer-text framer-styles-preset-nmfxqk"><br
                                                             class="framer-text trailing-break"></p>
@@ -15087,7 +15297,6 @@
     <script>(() => { function i() { for (let e of document.querySelectorAll("[data-framer-original-sizes]")) { let t = e.getAttribute("data-framer-original-sizes"); t === "" ? e.removeAttribute("sizes") : e.setAttribute("sizes", t), e.removeAttribute("data-framer-original-sizes") } } function a() { window.__framer_onRewriteBreakpoints = i } return a })()()</script>
 
 
-    <div id="__framer-badge-container"></div>
     <script data-framer-appear-animation="reduce"></script>
     <link rel="modulepreload" fetchpriority="low"
         href="https://framerusercontent.com/sites/6DecsANUuYy1Cz2XPbe1zK/chunk-NRCVJR2J.mjs">
@@ -15133,7 +15342,7 @@
         href="https://framerusercontent.com/sites/6DecsANUuYy1Cz2XPbe1zK/chunk-XYYPTKNK.mjs">
     <link rel="modulepreload" fetchpriority="low"
         href="https://framerusercontent.com/sites/6DecsANUuYy1Cz2XPbe1zK/script_main.JPJFDB2X.mjs">
-    <script type="module" async data-framer-bundle="main" fetchpriority="low"
+    <script defer type="module" async data-framer-bundle="main" fetchpriority="low"
         src="https://framerusercontent.com/sites/6DecsANUuYy1Cz2XPbe1zK/script_main.JPJFDB2X.mjs"></script>
     <div id="svg-templates"
         style="position: absolute; overflow: hidden; bottom: 0; left: 0; width: 0; height: 0; z-index: 0; contain: strict"
@@ -15142,6 +15351,8 @@
     <!-- Start of bodyEnd -->
 
     <!-- End of bodyEnd -->
+<script defer src="/assets/js/image-optimizer.js"></script>
+<script defer src="/assets/js/navigation-fix.js"></script>
 </body>
 
 <!-- Mirrored from large-lifecycle-826295.framer.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Apr 2025 11:05:34 GMT -->

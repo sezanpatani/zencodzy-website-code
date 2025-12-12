@@ -1,6 +1,199 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
+<script>// Ultra-Fast Page Loader - Waits for complete load
+(function () {
+    'use strict';
+
+    // Minimal critical CSS for instant display
+    const criticalCSS = `
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+        }
+        .instant-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .instant-loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-logo {
+            font-size: 48px;
+            font-weight: 700;
+            color: #9cff33;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .loader-bar {
+            width: 250px;
+            height: 4px;
+            background: rgba(156, 255, 51, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        .loader-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #9cff33, #7acc00);
+            width: 0%;
+            transition: width 0.4s ease-out;
+            box-shadow: 0 0 15px #9cff33;
+        }
+        .loader-text {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(156, 255, 51, 0.8);
+            letter-spacing: 1px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+    `;
+
+    // Inject critical CSS immediately
+    const style = document.createElement('style');
+    style.textContent = criticalCSS;
+    document.head.insertBefore(style, document.head.firstChild);
+
+    // Create loader HTML
+    const loader = document.createElement('div');
+    loader.className = 'instant-loader';
+    loader.innerHTML = `
+        <div class="loader-logo">ZENCODZY</div>
+        <div class="loader-bar">
+            <div class="loader-progress" id="loadProgress"></div>
+        </div>
+        <div class="loader-text" id="loadText">Loading...</div>
+    `;
+
+    // Insert loader immediately
+    if (document.body) {
+        document.body.insertBefore(loader, document.body.firstChild);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.insertBefore(loader, document.body.firstChild);
+        });
+    }
+
+    // Progress tracking
+    let progress = 0;
+    let isComplete = false;
+    const progressBar = () => document.getElementById('loadProgress');
+    const loadText = () => document.getElementById('loadText');
+
+    function updateProgress(value, text) {
+        progress = Math.min(value, 100);
+        const bar = progressBar();
+        if (bar) bar.style.width = progress + '%';
+
+        const textEl = loadText();
+        if (textEl && text) textEl.textContent = text;
+    }
+
+    // Initial progress
+    updateProgress(5, 'Loading...');
+
+    // Track loading stages
+    let resourcesLoaded = 0;
+    let totalResources = 0;
+    let imagesLoaded = 0;
+    let totalImages = 0;
+
+    // DOM Content Loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        updateProgress(20, 'Preparing content...');
+
+        // Count all resources
+        totalImages = document.images.length;
+        const scripts = document.scripts.length;
+        const stylesheets = document.styleSheets.length;
+        totalResources = totalImages + scripts + stylesheets;
+
+        updateProgress(30, 'Loading resources...');
+
+        // Track each image
+        Array.from(document.images).forEach((img, index) => {
+            const trackLoad = () => {
+                imagesLoaded++;
+                const imgProgress = 30 + (imagesLoaded / Math.max(totalImages, 1)) * 50;
+                updateProgress(imgProgress, `Loading images... ${imagesLoaded}/${totalImages}`);
+            };
+
+            if (img.complete) {
+                trackLoad();
+            } else {
+                img.addEventListener('load', trackLoad);
+                img.addEventListener('error', trackLoad);
+            }
+        });
+
+        // If no images, move to next stage
+        if (totalImages === 0) {
+            updateProgress(80, 'Almost ready...');
+        }
+    });
+
+    // Window fully loaded
+    window.addEventListener('load', () => {
+        updateProgress(90, 'Finalizing...');
+
+        // Wait a bit to ensure everything is rendered
+        setTimeout(() => {
+            updateProgress(100, 'Complete!');
+            isComplete = true;
+
+            // Hide loader after everything is ready
+            setTimeout(() => {
+                loader.classList.add('hide');
+
+                // Remove loader after animation
+                setTimeout(() => {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                }, 800);
+            }, 500);
+        }, 300);
+    });
+
+    // Safety fallback - force hide after 10 seconds
+    setTimeout(() => {
+        if (!isComplete) {
+            updateProgress(100, 'Ready!');
+            loader.classList.add('hide');
+            setTimeout(() => {
+                if (loader.parentNode) {
+                    loader.parentNode.removeChild(loader);
+                }
+            }, 800);
+        }
+    }, 10000);
+
+    // Prevent FOUC
+    document.documentElement.style.visibility = 'visible';
+
+})();
+</script>
     <meta charset="utf-8" />
     <meta
       http-equiv="Content-Security-Policy"
@@ -4545,10 +4738,20 @@
     <!-- Start of headEnd -->
 
     <!-- End of headEnd -->
-  </head>
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://framerusercontent.com">
+    <link rel="dns-prefetch" href="https://framerusercontent.com">
+<style>
+html{visibility:visible;-webkit-font-smoothing:antialiased}
+body{visibility:visible}
+section,article,.framer-component{content-visibility:auto;contain-intrinsic-size:auto 500px}
+img{max-width:100%;height:auto}
+.framer-motion,[data-framer-component-type]{will-change:transform;transform:translateZ(0);backface-visibility:hidden}
+</style>
+</head>
   <body>
     <!-- Removed Framer events script for localhost-only setup -->
-    <script src="js/error-suppressor.js"></script>
+    <script defer src="js/error-suppressor.js"></script>
     <!-- Start of bodyStart -->
 
     <!-- End of bodyStart -->
@@ -5276,7 +5479,6 @@
                                 );
                               "
                             >
-                              Plywood Artist Potrtfolio made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5373,7 +5575,6 @@
                                 );
                               "
                             >
-                              Plywood Artist Potrtfolio made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5470,7 +5671,6 @@
                                 );
                               "
                             >
-                              Plywood Artist Potrtfolio made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5566,7 +5766,6 @@
                                 );
                               "
                             >
-                              Huggl 1.0 Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5662,7 +5861,6 @@
                                 );
                               "
                             >
-                              Huggl 1.0 Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5758,7 +5956,6 @@
                                 );
                               "
                             >
-                              Huggl 1.0 Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5854,7 +6051,6 @@
                                 );
                               "
                             >
-                              Charmant Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -5950,7 +6146,6 @@
                                 );
                               "
                             >
-                              Charmant Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6046,7 +6241,6 @@
                                 );
                               "
                             >
-                              Charmant Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6143,7 +6337,6 @@
                                 );
                               "
                             >
-                              Predict Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6240,7 +6433,6 @@
                                 );
                               "
                             >
-                              Predict Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6337,7 +6529,6 @@
                                 );
                               "
                             >
-                              Predict Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6433,7 +6624,6 @@
                                 );
                               "
                             >
-                              Huggl 2.0 Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6529,7 +6719,6 @@
                                 );
                               "
                             >
-                              Huggl 2.0 Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6625,7 +6814,6 @@
                                 );
                               "
                             >
-                              Huggl 2.0 Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6722,7 +6910,6 @@
                                 );
                               "
                             >
-                              Payble Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6819,7 +7006,6 @@
                                 );
                               "
                             >
-                              Payble Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -6916,7 +7102,6 @@
                                 );
                               "
                             >
-                              Payble Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7013,7 +7198,6 @@
                                 );
                               "
                             >
-                              Pepper Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7110,7 +7294,6 @@
                                 );
                               "
                             >
-                              Pepper Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7207,7 +7390,6 @@
                                 );
                               "
                             >
-                              Pepper Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7304,7 +7486,6 @@
                                 );
                               "
                             >
-                              BrightSites Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7401,7 +7582,6 @@
                                 );
                               "
                             >
-                              BrightSites Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7498,7 +7678,6 @@
                                 );
                               "
                             >
-                              BrightSites Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7595,7 +7774,6 @@
                                 );
                               "
                             >
-                              HealthWell Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7692,7 +7870,6 @@
                                 );
                               "
                             >
-                              HealthWell Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7789,7 +7966,6 @@
                                 );
                               "
                             >
-                              HealthWell Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7885,7 +8061,6 @@
                                 );
                               "
                             >
-                              Reify Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -7981,7 +8156,6 @@
                                 );
                               "
                             >
-                              Reify Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8077,7 +8251,6 @@
                                 );
                               "
                             >
-                              Reify Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8173,7 +8346,6 @@
                                 );
                               "
                             >
-                              Cohesion Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8269,7 +8441,6 @@
                                 );
                               "
                             >
-                              Cohesion Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8365,7 +8536,6 @@
                                 );
                               "
                             >
-                              Cohesion Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8461,7 +8631,6 @@
                                 );
                               "
                             >
-                              Thelist Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8557,7 +8726,6 @@
                                 );
                               "
                             >
-                              Thelist Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8653,7 +8821,6 @@
                                 );
                               "
                             >
-                              Thelist Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8749,7 +8916,6 @@
                                 );
                               "
                             >
-                              Agentic Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8845,7 +9011,6 @@
                                 );
                               "
                             >
-                              Agentic Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -8941,7 +9106,6 @@
                                 );
                               "
                             >
-                              Agentic Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9037,7 +9201,6 @@
                                 );
                               "
                             >
-                              Bento Vibe Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9133,7 +9296,6 @@
                                 );
                               "
                             >
-                              Bento Vibe Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9229,7 +9391,6 @@
                                 );
                               "
                             >
-                              Bento Vibe Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9325,7 +9486,6 @@
                                 );
                               "
                             >
-                              ZenZap Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9421,7 +9581,6 @@
                                 );
                               "
                             >
-                              ZenZap Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9517,7 +9676,6 @@
                                 );
                               "
                             >
-                              ZenZap Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9613,7 +9771,6 @@
                                 );
                               "
                             >
-                              Vervedent Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9709,7 +9866,6 @@
                                 );
                               "
                             >
-                              Vervedent Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9805,7 +9961,6 @@
                                 );
                               "
                             >
-                              Vervedent Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9901,7 +10056,6 @@
                                 );
                               "
                             >
-                              Learny Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -9997,7 +10151,6 @@
                                 );
                               "
                             >
-                              Learny Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10093,7 +10246,6 @@
                                 );
                               "
                             >
-                              Learny Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10189,7 +10341,6 @@
                                 );
                               "
                             >
-                              Apex Wallet Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10285,7 +10436,6 @@
                                 );
                               "
                             >
-                              Apex Wallet Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10381,7 +10531,6 @@
                                 );
                               "
                             >
-                              Apex Wallet Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10477,7 +10626,6 @@
                                 );
                               "
                             >
-                              Teameave Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10573,7 +10721,6 @@
                                 );
                               "
                             >
-                              Teameave Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10669,7 +10816,6 @@
                                 );
                               "
                             >
-                              Teameave Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10764,7 +10910,6 @@
                                 );
                               "
                             >
-                              Wanted Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10859,7 +11004,6 @@
                                 );
                               "
                             >
-                              Wanted Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -10954,7 +11098,6 @@
                                 );
                               "
                             >
-                              Wanted Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11049,7 +11192,6 @@
                                 );
                               "
                             >
-                              Device Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11144,7 +11286,6 @@
                                 );
                               "
                             >
-                              Device Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11239,7 +11380,6 @@
                                 );
                               "
                             >
-                              Device Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11334,7 +11474,6 @@
                                 );
                               "
                             >
-                              Darko Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11429,7 +11568,6 @@
                                 );
                               "
                             >
-                              Darko Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11524,7 +11662,6 @@
                                 );
                               "
                             >
-                              Darko Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11619,7 +11756,6 @@
                                 );
                               "
                             >
-                              Kombo Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11714,7 +11850,6 @@
                                 );
                               "
                             >
-                              Kombo Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11809,7 +11944,6 @@
                                 );
                               "
                             >
-                              Kombo Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11904,7 +12038,6 @@
                                 );
                               "
                             >
-                              Roco Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -11999,7 +12132,6 @@
                                 );
                               "
                             >
-                              Roco Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12094,7 +12226,6 @@
                                 );
                               "
                             >
-                              Roco Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12189,7 +12320,6 @@
                                 );
                               "
                             >
-                              Spendly Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12284,7 +12414,6 @@
                                 );
                               "
                             >
-                              Spendly Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12379,7 +12508,6 @@
                                 );
                               "
                             >
-                              Spendly Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12474,7 +12602,6 @@
                                 );
                               "
                             >
-                              Kong Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12569,7 +12696,6 @@
                                 );
                               "
                             >
-                              Kong Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12664,7 +12790,6 @@
                                 );
                               "
                             >
-                              Kong Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12759,7 +12884,6 @@
                                 );
                               "
                             >
-                              Vector Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12854,7 +12978,6 @@
                                 );
                               "
                             >
-                              Vector Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -12949,7 +13072,6 @@
                                 );
                               "
                             >
-                              Vector Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13044,7 +13166,6 @@
                                 );
                               "
                             >
-                              ArtSpotter Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13139,7 +13260,6 @@
                                 );
                               "
                             >
-                              ArtSpotter Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13234,7 +13354,6 @@
                                 );
                               "
                             >
-                              ArtSpotter Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13329,7 +13448,6 @@
                                 );
                               "
                             >
-                              The Decor Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13424,7 +13542,6 @@
                                 );
                               "
                             >
-                              The Decor Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13519,7 +13636,6 @@
                                 );
                               "
                             >
-                              The Decor Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13614,7 +13730,6 @@
                                 );
                               "
                             >
-                              Feedo Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13709,7 +13824,6 @@
                                 );
                               "
                             >
-                              Feedo Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13804,7 +13918,6 @@
                                 );
                               "
                             >
-                              Feedo Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13899,7 +14012,6 @@
                                 );
                               "
                             >
-                              Bookease Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -13994,7 +14106,6 @@
                                 );
                               "
                             >
-                              Bookease Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14089,7 +14200,6 @@
                                 );
                               "
                             >
-                              Bookease Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14184,7 +14294,6 @@
                                 );
                               "
                             >
-                              Architek Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14279,7 +14388,6 @@
                                 );
                               "
                             >
-                              Architek Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14374,7 +14482,6 @@
                                 );
                               "
                             >
-                              Architek Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14469,7 +14576,6 @@
                                 );
                               "
                             >
-                              Lookfolio Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14564,7 +14670,6 @@
                                 );
                               "
                             >
-                              Lookfolio Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -14659,7 +14764,6 @@
                                 );
                               "
                             >
-                              Lookfolio Website made in Framer
                             </p>
                           </div>
                         </div></a
@@ -15893,7 +15997,7 @@
       fetchpriority="low"
       href="https://framerusercontent.com/sites/6DecsANUuYy1Cz2XPbe1zK/script_main.JPJFDB2X.mjs"
     />
-    <script
+    <script defer
       type="module"
       async
       data-framer-bundle="main"
@@ -15914,6 +16018,9 @@
       "
       aria-hidden="true"
     ></div>
-    <script src="js/local-asset-rewriter.js"></script>
-  </body>
+    <script defer src="js/local-asset-rewriter.js"></script>
+  <script defer src="/assets/js/image-optimizer.js"></script>
+<script defer src="/assets/js/navigation-fix.js"></script>
+</body>
 </html>
+
