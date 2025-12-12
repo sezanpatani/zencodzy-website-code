@@ -35,8 +35,6 @@
       // Add our custom submit handler
       newForm.addEventListener('submit', handleFormSubmit, true);
     });
-
-    console.log(`✅ Custom form handler initialized for ${forms.length} form(s) (Framer handler disabled)`);
   }
 
   /**

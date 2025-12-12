@@ -2,13 +2,13 @@ import 'dotenv/config';
 import express from 'express';
 import setupSecurity from './middleware/security.js';
 import apiRoutes from './routes/api.js';
-import { getRedisClient } from './config/redis.js';
+import connectDB from './config/db.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 1. Initialize Database
-getRedisClient();
+// 1. Initialize Database (MongoDB)
+connectDB();
 
 // 2. Setup Security & Middleware
 setupSecurity(app);

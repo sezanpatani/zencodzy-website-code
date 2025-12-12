@@ -1,85 +1,78 @@
-import { getRedisClient } from '../config/redis.js';
+import Submission from '../models/Submission.js';
 
-// @desc    Submit a form
+// @desc    Submit a form (Get a Quote / Contact)
 // @route   POST /api/submit-form
 // @access  Public
 export const submitForm = async (req, res) => {
     try {
-        const redis = getRedisClient();
-        if (!redis) {
-            return res.status(503).json({ success: false, error: 'Database service unavailable' });
+        const formData = req.body;
+
+        // Basic validation handled by Mongoose, but we can do extra checks here
+        if (!formData.formType) {
+            formData.formType = 'unknown';
         }
 
-        const formData = req.body;
-        const formType = formData.formType || 'unknown';
+        // Add IP address for audit (used internally)
+        const ip = req.ip || req.connection.remoteAddress;
 
-        // Generate ID
-        const timestamp = Date.now();
-        const id = `${formType}_${timestamp}`;
-
-        // Prepare data
-        const dataToStore = {
+        // Create new submission in MongoDB
+        const submission = await Submission.create({
             ...formData,
-            id,
-            submittedAt: new Date().toISOString(),
-            ip: req.ip // Audit logging (internal use only)
-        };
+            ip
+        });
 
-        // Store in Redis
-        // 1. Store the actual data hash
-        await redis.set(id, JSON.stringify(dataToStore));
-        // 2. Add ID to the specific set for this form type for easy retrieval
-        await redis.sadd(`submissions:${formType}`, id);
-
-        // Security: Remove sensitive internal fields before responding
-        delete dataToStore.ip;
-
-        console.log(`✅ Form submitted: ${formType} - ${id}`);
+        console.log(`✅ MongoDB: Form submitted [${submission.formType}] - ${submission._id}`);
 
         res.status(201).json({
             success: true,
             message: 'Form submitted successfully',
-            data: { id }
+            submissionId: submission._id,
+            data: {
+                id: submission._id,
+                createdAt: submission.createdAt
+            }
         });
 
     } catch (error) {
         console.error('❌ Form submission error:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
+
+        // Handle Mongoose Validation Errors
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(val => val.message);
+            return res.status(400).json({
+                success: false,
+                error: messages.join(', ')
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            error: 'Server Error: Could not save submission'
+        });
     }
 };
 
 // @desc    Get submissions by type
 // @route   GET /api/get-submissions
-// @access  Private (should be protected in prod, strictly limited by CORS for now)
+// @access  Private (Restricted by CORS)
 export const getSubmissions = async (req, res) => {
     try {
-        const redis = getRedisClient();
-        if (!redis) {
-            return res.status(503).json({ success: false, error: 'Database service unavailable' });
+        const formType = req.query.type;
+        const limit = parseInt(req.query.limit) || 50;
+
+        let query = {};
+        if (formType) {
+            query.formType = formType;
         }
 
-        const formType = req.query.type || 'quote';
-
-        // Get all IDs from the set
-        const ids = await redis.smembers(`submissions:${formType}`);
-
-        if (!ids || ids.length === 0) {
-            return res.status(200).json({ success: true, count: 0, submissions: [] });
-        }
-
-        // Fetch all data in parallel
-        // Optimization: Use Redis MGET if frequent, but pipeline/parallel get is fine for now
-        const submissions = await Promise.all(
-            ids.map(async (id) => {
-                const data = await redis.get(id);
-                return data ? JSON.parse(data) : null;
-            })
-        );
+        const submissions = await Submission.find(query)
+            .sort({ createdAt: -1 }) // Newest first
+            .limit(limit);
 
         res.status(200).json({
             success: true,
             count: submissions.length,
-            submissions: submissions.filter(Boolean)
+            submissions
         });
 
     } catch (error) {
