@@ -1,7 +1,7 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const { Redis } = require('@upstash/redis');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import { Redis } from '@upstash/redis';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,9 +38,9 @@ app.post('/api/submit-form', async (req, res) => {
     const formData = req.body || {};
 
     if (!formData.name || !formData.email) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Name and email are required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Name and email are required'
       });
     }
 
@@ -66,15 +66,15 @@ app.post('/api/submit-form', async (req, res) => {
     const formType = formData.formType || 'get-a-quote';
     await redis.lpush(`form:${formType}`, submissionId);
 
-    return res.status(200).json({ 
-      success: true, 
+    return res.status(200).json({
+      success: true,
       message: 'Form submitted successfully!',
       submissionId
     });
   } catch (error) {
     console.error('Error storing form data:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       message: 'Failed to submit form. Please try again.',
       error: error.message
     });
@@ -107,11 +107,11 @@ app.get('/api/get-submissions', async (req, res) => {
       })
     );
 
-    const total = formType 
+    const total = formType
       ? await redis.llen(`form:${formType}`)
       : await redis.zcard('form:submissions');
 
-    return res.status(200).json({ 
+    return res.status(200).json({
       success: true,
       total,
       offset,
@@ -120,8 +120,8 @@ app.get('/api/get-submissions', async (req, res) => {
     });
   } catch (error) {
     console.error('Error retrieving submissions:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       message: 'Failed to retrieve submissions',
       error: error.message
     });
