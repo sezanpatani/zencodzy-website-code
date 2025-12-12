@@ -1,357 +1,149 @@
-# ZENCODZY Website
+# ZENCODZY - Digital Agency Platform
+> **Advanced High-Performance Website for Modern Digital Solutions**
 
-**Professional Full-Stack Website with Original Framer Design**
+![Version](https://img.shields.io/badge/version-3.0.0-blue.svg) ![Status](https://img.shields.io/badge/status-production--ready-success.svg) ![Security](https://img.shields.io/badge/security-hardened-secure.svg)
 
-## 📁 Project Structure
+## 📖 Overview
+**ZENCODZY** is a state-of-the-art digital agency website built with a focus on **zero-latency performance**, **pixel-perfect design fidelity**, and **robust security**. 
+
+Starting from a high-fidelity visual design (Framer), this project has been engineered into a full-scale web application featuring a custom Node.js backend, serverless Redis database, and a highly optimized frontend architecture.
+
+---
+
+## 🚀 Key Features
+
+### 🎨 Frontend Excellence
+- **Ultra-Fast Loading:** Custom-built `ultra-fast-loader.js` provides instant visual feedback with session-aware behavior.
+- **Smart Navigation:** `navigation-fix.js` implements an intelligent routing system that handles smooth scrolling for sections and instant transitions for pages.
+- **Visual Fidelity:** 100% preservation of complex animations and layouts from the original Framer design.
+- **Asset Optimization:** Automated lazy loading (`image-optimizer.js`) and localized font preloading.
+
+### ⚙️ Backend Power
+- **Secure API:** Express.js backend hardened with `Helmet`, `Rate-Limiting`, `HPP`, and `XSS-Clean`.
+- **Serverless Storage:** Integration with **Upstash Redis** for blazing-fast, scalable form submissions.
+- **Modular Architecture:** Clean separation of concerns (MVC pattern) for maintainabillity.
+
+### 🛡️ Security First
+- **Strict CORS:** Access locked down to specific frontend origins.
+- **Input Sanitization:** All incoming data is rigorously validated and sanitized to prevent injection attacks.
+- **DDoS Protection:** Rate limiting mitigates abuse and brute-force attempts.
+
+---
+
+## 🛠 Tech Stack
+
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Frontend** | Vite, HTML5, Vanilla JS | Ultra-fast build tool and lightweight runtime. |
+| **Backend** | Node.js, Express.js | Robust API server with secure middleware. |
+| **Database** | Upstash Redis | Serverless Key-Value store for form data. |
+| **Dev Tools** | Concurrently, Dotenv | Efficient development workflow. |
+
+---
+
+## 📂 Project Structure
 
 ```
 zencodzy-website-code/
-├── client/                          # Frontend (Framer Design)
-│   ├── public/                      # Static assets
-│   │   ├── assets/                  # JavaScript & other assets
-│   │   │   └── js/                  # Client-side JavaScript
-│   │   │       ├── error-suppressor.js
-│   │   │       ├── local-asset-rewriter.js
-│   │   │       └── form-handler.js
-│   │   └── framerusercontent.com/   # Framer CDN assets
-│   ├── pages/                       # Additional pages
-│   │   ├── get-a-quote.html        # Quote request form
-│   │   ├── join-our-team.html      # Careers/application form
-│   │   ├── projects.html           # Projects showcase
-│   │   └── projects/               # Project assets
-│   ├── index.html                  # Main homepage
-│   ├── index-original.html         # Backup of original
-│   └── vite.config.js              # Vite configuration
-│
-├── server/                          # Backend (Express + Redis)
-│   ├── index.js                    # Main server file
-│   ├── routes/                     # API routes (future)
-│   └── config/                     # Configuration files (future)
-│
-├── .env                            # Environment variables (gitignored)
-├── .env.example                    # Environment template
-├── .gitignore                      # Git ignore rules
-├── package.json                    # Project dependencies
-└── README.md                       # This file
+├── client/                     # Frontend Application
+│   ├── pages/                  # HTML Pages (Projects, Quote, etc.)
+│   ├── public/assets/js/       # Core Logic Scripts
+│   │   ├── console-fix.js      # Dev: Suppresses harmless console noise
+│   │   ├── form-handler.js     # Logic: Handles API form submissions
+│   │   ├── framer-init-fix.js  # Dev: Fixes Framer CORS issues
+│   │   ├── image-optimizer.js  # Perf: Lazy loading for images
+│   │   ├── navigation-fix.js   # UX: Smart routing & smooth scrolling
+│   │   └── ultra-fast-loader.js# UX: Instant branded loading screen
+│   ├── vite.config.js          # Build Configuration (Proxy, HMR disabled)
+│   └── index.html              # Main Entry Point
+├── server/                     # Backend API (Node.js + Express)
+│   ├── config/redis.js         # Database Connection
+│   ├── controllers/            # Business Logic
+│   ├── middleware/security.js  # Security Headers & Rate Limiting
+│   ├── routes/api.js           # API Endpoints
+│   └── index.js                # Server Entry Point
+├── .env                        # Environment Variables (Secrets)
+└── package.json                # Project Manifest
 ```
 
-## 🚀 Quick Start
+---
+
+## ⚡ Getting Started
 
 ### Prerequisites
-- **Node.js** v18 or higher
-- **npm** or **yarn**
-- **Upstash Redis** account (for form submissions)
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
+- **Redis Credentials**: Upstash REST URL & Token
 
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone <your-repo-url>
-cd zencodzy-website-code
-```
-
-2. **Install dependencies**
+### 1. Installation
+Clone the repository and install dependencies:
 ```bash
 npm install
 ```
 
-3. **Configure environment variables**
+### 2. Configuration
+Create a `.env` file in the root directory:
 ```bash
-# Copy the example file
-cp .env.example .env
-
-# Edit .env and add your credentials
-# - UPSTASH_REDIS_REST_URL
-# - UPSTASH_REDIS_REST_TOKEN
+# .env file
+PORT=5000
+UPSTASH_REDIS_REST_URL=your_url_here
+UPSTASH_REDIS_REST_TOKEN=your_token_here
+FRONTEND_URL=http://localhost:3000
 ```
 
-4. **Run development servers**
+### 3. Development
+Run both client and server concurrently:
 ```bash
 npm run dev
 ```
+- **Frontend:** [http://localhost:3000](http://localhost:3000)
+- **Backend:** [http://localhost:5000](http://localhost:5000)
 
-This starts:
-- **Frontend**: http://localhost:3000 (Vite dev server)
-- **Backend**: http://localhost:5000 (Express API server)
-
-## 📜 Available Scripts
-
-### Development
-```bash
-npm run dev          # Run both client and server
-npm run dev:client   # Run frontend only
-npm run dev:server   # Run backend only
-```
-
-### Production
-```bash
-npm run build        # Build frontend for production
-npm run preview      # Preview production build
-npm start            # Start production server
-```
-
-## 🎨 Design Specifications
-
-### Original Framer Design
-- ✅ **100% Preserved** - All animations, styles, and interactions
-- ✅ **Fully Responsive** - Mobile, Tablet, Desktop
-- ✅ **Premium Animations** - Scroll effects, hover states, transitions
-- ✅ **Custom Typography** - Big Shoulders Text + Inter fonts
-- ✅ **Modern Color Palette** - Black, Lime Green, White
-
-### Responsive Breakpoints
-- **Mobile**: ≤ 809px
-- **Tablet**: 810px - 1199px
-- **Desktop**: ≥ 1200px
-
-### Typography
-- **Headings**: Big Shoulders Text (700 weight)
-- **Body**: Inter (200-900 weights)
-
-### Color Palette
-```css
---black: #000000
---lime: #9cff33
---white: #ffffff
---red: #ff3333
-```
-
-## 🔌 Backend API
-
-### Base URL
-- **Development**: `http://localhost:5000/api`
-- **Production**: `https://your-domain.com/api`
-
-### Endpoints
-
-#### Health Check
-```http
-GET /health
-```
-
-Response:
-```json
-{
-  "ok": true,
-  "service": "zencodzy-backend",
-  "time": "2024-01-01T00:00:00.000Z"
-}
-```
-
-#### Submit Form
-```http
-POST /api/submit-form
-Content-Type: application/json
-
-{
-  "formType": "quote" | "career",
-  "name": "string",
-  "email": "string",
-  "message": "string",
-  ...
-}
-```
-
-Response:
-```json
-{
-  "success": true,
-  "message": "Form submitted successfully",
-  "id": "quote_1234567890"
-}
-```
-
-#### Get Submissions
-```http
-GET /api/get-submissions?type=quote
-GET /api/get-submissions?type=career
-```
-
-Response:
-```json
-{
-  "success": true,
-  "submissions": [
-    {
-      "id": "quote_1234567890",
-      "formType": "quote",
-      "name": "John Doe",
-      "email": "john@example.com",
-      "submittedAt": "2024-01-01T00:00:00.000Z",
-      ...
-    }
-  ]
-}
-```
-
-## 🌐 Pages
-
-### Main Pages
-- **Home** (`/`) - Landing page with hero, services, animations
-- **Projects** (`/pages/projects.html`) - Portfolio showcase
-- **Get A Quote** (`/pages/get-a-quote.html`) - Quote request form
-- **Join Our Team** (`/pages/join-our-team.html`) - Careers/application form
-
-### Features
-- Form validation
-- Backend integration
-- Smooth animations
-- SEO optimized
-- Responsive layouts
-
-## 🔧 Configuration
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-# Server
-PORT=5000
-NODE_ENV=development
-
-# Frontend
-FRONTEND_URL=http://localhost:3000
-
-# Upstash Redis
-UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your_token_here
-```
-
-### Vite Configuration
-
-Located at `client/vite.config.js`:
-- **Root**: `client/` directory
-- **Public**: `client/public/` for static assets
-- **Proxy**: `/api` → `http://localhost:5000`
-- **Build**: Output to `dist/`
-
-## 📦 Dependencies
-
-### Production
-- `express` - Web framework
-- `cors` - Cross-origin resource sharing
-- `dotenv` - Environment variables
-- `@upstash/redis` - Serverless Redis client
-
-### Development
-- `vite` - Frontend build tool
-- `concurrently` - Run multiple commands
-
-## 🚢 Deployment
-
-### Frontend (Vercel/Netlify)
-
-1. **Build the project**
+### 4. Build for Production
+Generate the optimized static build:
 ```bash
 npm run build
 ```
 
-2. **Deploy the `dist/` folder**
+---
 
-3. **Set environment variables**
-- `VITE_API_URL` - Your backend URL
+## 📄 API Documentation
 
-### Backend (Vercel/Railway/Render)
+### POST `/api/submit-form`
+Submits a contact or quote request.
 
-1. **Deploy `server/` directory**
-
-2. **Set environment variables**
-- `PORT`
-- `FRONTEND_URL`
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
-
-3. **Update CORS origins** in `server/index.js`
-
-### Full-Stack (Vercel)
-
-Use the included `vercel.json` configuration for seamless deployment.
-
-## 🔐 Security
-
-- ✅ CORS configured for specific origins
-- ✅ Environment variables for sensitive data
-- ✅ Input validation on forms
-- ✅ Secure Redis connection
-- ✅ Rate limiting (recommended for production)
-
-## 🐛 Troubleshooting
-
-### Port Already in Use
-```bash
-# Kill processes on ports 3000 and 5000
-npx kill-port 3000 5000
-
-# Then restart
-npm run dev
+**Body:**
+```json
+{
+  "formType": "contact",
+  "name": "John Doe",
+  "email": "john@example.com",
+  "message": "Hello Zencodzy!"
+}
 ```
 
-### Environment Variables Not Loading
-- Ensure `.env` exists in root directory
-- Check variable names match exactly
-- Restart server after changes
-
-### Forms Not Submitting
-- Verify Upstash Redis credentials
-- Check backend is running on port 5000
-- Check browser console for errors
-- Verify CORS settings
-
-### Assets Not Loading
-- Check paths in HTML files
-- Ensure `client/public/` contains all assets
-- Clear browser cache
-- Check Vite dev server is running
-
-## 📊 Performance
-
-- **First Contentful Paint**: < 1.5s
-- **Time to Interactive**: < 3s
-- **Lighthouse Score**: 90+
-- **Mobile Optimized**: Yes
-- **SEO Friendly**: Yes
-
-## 🎯 Key Features
-
-### Frontend
-- ✅ Original Framer design preserved
-- ✅ All CSS animations intact
-- ✅ Scroll effects and transitions
-- ✅ Responsive layouts
-- ✅ Fast Vite dev server
-- ✅ Optimized production builds
-
-### Backend
-- ✅ RESTful API
-- ✅ Redis data persistence
-- ✅ Form submission handling
-- ✅ CORS configuration
-- ✅ Error handling
-- ✅ Health check endpoint
-
-## 📞 Support
-
-For issues or questions:
-- **Email**: hello.zencodzy@gmail.com
-- **Twitter**: [@zencodzy](https://x.com/zencodzy)
-- **Instagram**: [@zencodzy](https://www.instagram.com/zencodzy)
-
-## 📝 License
-
-Copyright © 2024 ZENCODZY. All rights reserved.
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Form submitted successfully",
+  "data": { "id": "contact_17072..." }
+}
+```
 
 ---
 
-**Made with ❤️ by ZENCODZY**
+## 🤝 Contributing
+1.  Fork the repository.
+2.  Create a feature branch (`git checkout -b feature/amazing-feature`).
+3.  Commit your changes (`git commit -m 'Add amazing feature'`).
+4.  Push to the branch (`git push origin feature/amazing-feature`).
+5.  Open a Pull Request.
 
-**Status**: ✅ Production Ready  
-**Structure**: Professional Client/Server  
-**Design**: 100% Original Framer  
-**Backend**: Express + Redis  
-**Responsive**: All Devices
+---
 
+## 📝 License
+This project is proprietary software belonging to **ZENCODZY**. All rights reserved.
 
-
-
-npx -y kill-port 3000 5000
+---
+*Built with precision by ZENCODZY Engineering Team.*

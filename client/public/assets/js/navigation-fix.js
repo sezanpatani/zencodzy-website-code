@@ -3,7 +3,7 @@
     'use strict';
 
     function fixAllNavigation() {
-        console.log('🔧 Fixing all navigation...');
+        // console.log('🔧 Fixing all navigation...');
 
         // Find all clickable elements
         const allElements = document.querySelectorAll('a, button, div[role="button"], span[role="button"]');
@@ -46,7 +46,7 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    console.log(`✅ Navigating to: ${targetUrl}`);
+                    // console.log(`✅ Navigating to: ${targetUrl}`);
 
                     // Direct navigation - no loader
                     window.location.href = targetUrl;
@@ -54,7 +54,7 @@
                     return false;
                 }, true);
 
-                console.log(`✅ Fixed: "${text}" → ${targetUrl}`);
+                // console.log(`✅ Fixed: "${text}" → ${targetUrl}`);
             }
 
             // Fix section scrolling
@@ -78,7 +78,7 @@
             }
         });
 
-        console.log('✅ Navigation fixed!');
+        // console.log('✅ Navigation fixed!');
     }
 
     // Run on DOM ready
