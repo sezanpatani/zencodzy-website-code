@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true,
-    host: true, // Expose to network
+    host: false, // Expose to network
     open: true,
     headers: {
       'Cache-Control': 'public, max-age=31536000',
@@ -24,6 +24,17 @@ export default defineConfig({
       },
     },
   },
+  plugins: [
+    {
+      name: 'inject-console-cleanup',
+      transformIndexHtml(html) {
+        return html.replace(
+          '<head>',
+          '<head>\n<script src="/assets/js/console-cleanup.js"></script>'
+        );
+      },
+    },
+  ],
   build: {
     outDir: resolve(__dirname, '..', 'dist'),
     emptyOutDir: true,
